@@ -101,3 +101,73 @@ body {
 .btn:hover {
     transform: translateY(-1px);
 }
+.hero-section {
+    padding: 60px 0;
+    margin-left: 40px;
+    background-color: #fff;
+}
+.hero-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+.hero-text {
+    flex: 1;
+    max-width: 600px;
+    font-family: Poppins, sans-serif;
+}
+.hero-text h1 {
+    font-size: 2.7rem;
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+.hero-text .subtitle {
+    font-size: 1.5rem;
+    color: #888;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+.hero-description p {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+.hero-features {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 20px 0 40px 0;
+}
+.hero-features li {
+    font-size: 1.1rem;
+    color: #000;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.btn-large {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+.btn-large:hover {
+    background-color: var(--secondary-color);
+}
+.hero-image {
+    flex: 1.5;
+    display: flex;
+    justify-content: center;
+}
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    min-height: 300px; 
+}
