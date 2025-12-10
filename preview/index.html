@@ -65,7 +65,44 @@
             </div>
         </div>
     </header>
-    <section class="featured-jobs-section">
+    <section class="featured-jobs-section" id="jobs-anchor">
+        <div class="container">
+            <h2 class="section-title">Featured Jobs</h2>
+
+            <div v-if="isLoading" style="text-align: center; padding: 40px;">
+                <p>Loading opportunities...</p>
+            </div>
+
+            <div v-if="error" style="color: red; text-align: center;">
+                <p>[[ error ]]</p>
+            </div>
+
+            <div class="jobs-grid" v-if="!isLoading">
+                
+                <div class="job-card" v-for="job in filteredJobs" :key="job.id">
+                    <h3 class="job-title">[[ job.title ]]</h3>
+                    
+                    <div class="job-details">
+                        <p>Company : <span class="highlight-red">[[ job.company ]]</span></p>
+                        <p>Location : <span class="highlight-red">[[ job.location ]]</span></p>
+                        <p>Experience : <span class="highlight-red">[[ job.experience ]]</span></p>
+                        <p>Salary : <span class="highlight-red">[[ job.salary ]]</span></p>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn-card-apply" @click="applyForJob(job)">Apply</button>
+                        <button class="btn btn-card-details">Details</button>
+                    </div>
+                </div>
+                </div>
+
+            <div class="view-all-container">
+                <a href="/jobs" class="btn btn-view-all">View All Jobs</a>
+            </div>
+
+        </div>
+    </section>
+    <!-- <section class="featured-jobs-section">
         <div class="container">
             <h2 class="section-title">Featured Jobs</h2>
             <div class="jobs-grid">
@@ -178,10 +215,11 @@
                 <a href="/jobs" class="btn btn-view-all">View All Jobs</a>
             </div>
         </div>
-    </section>
+    </section> -->
 
     </div>
 
+    <script src="../static/js/model.js"></script>
     <script src="../static/js/main.js"></script>
 </body>
 </html>
