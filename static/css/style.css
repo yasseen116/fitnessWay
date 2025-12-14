@@ -402,3 +402,97 @@ body {
     background-color: var(--primary-color);
     color: white;
 }
+
+.site-footer {
+    background-color: var(--primary-color); 
+    color: var(--white);
+    padding: 0 0 20px 0;
+    margin-top: auto;
+}
+
+.footer-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 20px;
+    gap: 40px;
+    margin-left: 30px;
+}
+
+.footer-info {
+    max-width: 600px;
+}
+
+.footer-logo {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--white);
+}
+
+.footer-desc {
+    font-size: 1.1rem;
+    font-family: Poppins, sans-serif;
+    line-height: 1.6;
+    color: #e0e7ff;
+}
+
+.footer-socials {
+    text-align: center;
+    margin-right: 30px;
+}
+
+.footer-socials h3 {
+    font-size: 1.5rem;
+    font-family: Poppins, sans-serif;
+    font-weight: 700;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--white);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.icon-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.icon-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.icon-btn:hover {
+    transform: translateY(-3px);
+    background: var(--white);
+}
+
+.icon-btn.fb:hover svg path { fill: #1877F2; }
+.icon-btn.in:hover svg path { fill: #0A66C2; }
+.icon-btn.ig:hover svg path { fill: #E4405F; }
+.icon-btn.wa:hover svg path { fill: #25D366; }
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 1rem;
+    font-family: Poppins, sans-serif;
+    color: #cbd5e1;
+}
+
+.footer-bottom p {
+    margin: 5px 0;
+}
