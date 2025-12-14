@@ -341,7 +341,8 @@ body {
     padding: 10px 5px;
     
     overflow-x: auto;
-    scroll-behavior: smooth;
+    overflow-y: hidden;
+    scroll-behavior: auto;
     
     scrollbar-width: none;
     -ms-overflow-style: none;

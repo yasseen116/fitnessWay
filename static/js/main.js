@@ -8,7 +8,8 @@ const app = createApp({
             isLoading: true,  
             error: null,
             
-            companies: [] 
+            companies: [],
+            isTeleporting: false
         };
     },
     
@@ -16,6 +17,15 @@ const app = createApp({
         await this.loadJobs();
         
         this.companies = CompanyModel.getTopCompanies();
+
+        const originals = CompanyModel.getTopCompanies();
+
+        this.companies = [...originals, ...originals];
+
+        const container = document.querySelector('.companies-grid');
+        if (container) {
+            container.addEventListener('scroll', this.handleInfiniteScroll);
+        }
     },
 
     computed: {
@@ -43,26 +53,38 @@ const app = createApp({
             }
         },
 
+        handleInfiniteScroll(e) {
+            const container = e.target;
+            if (this.isTeleporting) return;
+
+            // We calculate the width of ONE full set of companies
+            // (Total width / 2 because we duplicated it once)
+            const oneSetWidth = container.scrollWidth / 2;
+
+            // CHECK 1: Have we scrolled past the end of the first set?
+            if (container.scrollLeft >= oneSetWidth) {
+                // TELEPORT BACK TO START (Invisible Jump)
+                this.isTeleporting = true;
+                container.scrollLeft -= oneSetWidth;
+                this.isTeleporting = false;
+            } 
+            // CHECK 2: Have we scrolled past the start (going backwards)?
+            else if (container.scrollLeft <= 0) {
+                // TELEPORT TO THE MIDDLE (Invisible Jump)
+                this.isTeleporting = true;
+                container.scrollLeft += oneSetWidth;
+                this.isTeleporting = false;
+            }
+        },
+
         scrollCompanies(direction) {
             const container = document.querySelector('.companies-grid');
-            if (!container) return;
-
-            const scrollAmount = 300;
-            
-            const maxScroll = container.scrollWidth - container.clientWidth;
+            const scrollAmount = 390; 
 
             if (direction === 'left') {
-                if (container.scrollLeft <= 5) {
-                    container.scrollTo({ left: maxScroll, behavior: 'smooth' });
-                } else {
-                    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                }
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             } else {
-                if (container.scrollLeft >= maxScroll - 5) {
-                    container.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                }
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
         },
 
