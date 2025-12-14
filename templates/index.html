@@ -46,7 +46,7 @@
 
             <div class="jobs-grid" v-if="!isLoading">
                 
-                <div class="job-card" v-for="job in filteredJobs" :key="job.id">
+                <div class="job-card" v-for="job in filteredJobs.slice(0, 8)" :key="job.id">
                     <h3 class="job-title">[[ job.title ]]</h3>
                     
                     <div class="job-details">
