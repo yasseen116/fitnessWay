@@ -80,7 +80,7 @@ const app = createApp({
 
         scrollCompanies(direction) {
             const container = document.querySelector('.companies-grid');
-            const scrollAmount = 390; 
+            const scrollAmount = 394; 
 
             if (direction === 'left') {
                 container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });

@@ -373,6 +373,7 @@ body {
     padding: 60px 0;
     background-color: var(--white);
     text-align: center;
+
 }
 
 .companies-section .section-title {
@@ -386,7 +387,7 @@ body {
     align-items: center;
     gap: 20px;
     position: relative;
-    max-width: 1100px;
+    max-width: 1150px;
     margin: 0 auto;
 }
 
