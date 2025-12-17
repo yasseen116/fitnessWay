@@ -100,7 +100,7 @@ body {
 .search-bar input {
     border: none;
     outline: none;
-    font-size: 17px;
+    font-size: 16px;
     color: #333;
     flex: 1;
     min-width: 0;
