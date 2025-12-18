@@ -1,0 +1,89 @@
+{% extends "_base.html" %}
+
+{% block title %}Browse Jobs - Hired{% endblock %}
+
+{% block content %}
+    <div class="page" id="app">
+        
+        <div class="browse-jobs">
+            <div class="container">
+                
+                <div v-if="isLoading" style="text-align: center; padding: 50px;">
+                    <p>Loading jobs...</p>
+                </div>
+
+                <div v-else-if="filteredJobs.length === 0" style="text-align: center; padding: 50px;">
+                    <p>No jobs found matching your criteria.</p>
+                </div>
+
+                <div class="all-jobs-grid" v-else>
+                    
+                    <div class="job-card" v-for="job in filteredJobs" :key="job.id">
+    
+                        <h3 class="job-title">[[ job.title ]]</h3>
+                        
+                        <div class="job-card-logo">
+                            <img v-if="job.logoUrl" :src="job.logoUrl" :alt="job.company">
+                            <div v-else style="font-weight:bold; color:#555;">[[ job.company ]]</div>
+                        </div>
+    
+                        <div class="job-details">
+                            <p>Company : <span class="highlight-red">[[ job.company ]]</span></p>
+                            <p>Location : <span class="highlight-red">[[ job.location ]]</span></p>
+                            <p>Experience : <span class="highlight-red">[[ job.experience ]]</span></p>
+                            <p>Salary : <span class="highlight-red">[[ job.salary ]]</span></p>
+                            <p>Job Type : <span class="highlight-red">[[ job.type ]]</span></p>
+                        </div>
+    
+                        <div class="card-actions">
+                            <button class="btn btn-card-apply">Apply</button>
+                            <button class="btn btn-card-details" @click="goToDetails(job.id)">Details</button>
+                        </div>
+    
+                    </div>
+
+                </div>
+            </div>        
+        </div>
+
+        <div class="filters">
+            <h3>Filters</h3>
+            
+            <div class="filter-group">
+                <label>Workplace</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="On-site" v-model="filters.workplace"> On-site</label>
+                    <label><input type="checkbox" value="Hybrid" v-model="filters.workplace"> Hybrid</label>
+                    <label><input type="checkbox" value="Remote" v-model="filters.workplace"> Remote</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>City</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="Cairo" v-model="filters.city"> Cairo</label>
+                    <label><input type="checkbox" value="Giza" v-model="filters.city"> Giza</label>
+                    <label><input type="checkbox" value="Alexandria" v-model="filters.city"> Alexandria</label>
+                    <label><input type="checkbox" value="Mansoura" v-model="filters.city"> Mansoura</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Job Category</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="Accounting" v-model="filters.category"> Accounting</label>
+                    <label><input type="checkbox" value="Sales" v-model="filters.category"> Sales</label>
+                    <label><input type="checkbox" value="IT" v-model="filters.category"> IT</label>
+                    <label><input type="checkbox" value="Marketing" v-model="filters.category"> Marketing</label>
+                    <label><input type="checkbox" value="Engineering" v-model="filters.category"> Engineering</label>
+                </div>
+            </div>
+        </div>
+
+    </div>     
+{% endblock %}
+
+{% block scripts %}
+    <script src="../static/js/model.js"></script>
+    <script src="../static/js/browse-jobs.js"></script>
+{% endblock %}
