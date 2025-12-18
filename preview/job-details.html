@@ -86,7 +86,7 @@
                     }
                 });
 
-                // 4. HELPER: LOGOUT FUNCTION
+                // 4. LOGOUT FUNCTION
                 // You can call this function to sign out
                 function logout() {
                     localStorage.removeItem('user'); // Deletes the data
@@ -132,6 +132,22 @@
                             
                             <button 
                                 class="btn btn-share-icon" 
+                                @click="toggleWishlist" 
+                                :title="isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'"
+                                :style="isInWishlist ? 'border-color: #ef4444; color: #ef4444; background-color: #fef2f2;' : ''"
+                            >
+                                <svg v-if="isInWishlist" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="1" y1="1" x2="21" y2="21"></line>
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+
+                            <button 
+                                class="btn btn-share-icon" 
                                 @click="copyLink" 
                                 :title="isCopied ? 'Link Copied!' : 'Share Job'"
                                 :style="isCopied ? 'border-color: #2ecc71; color: #2ecc71;' : ''"
@@ -144,6 +160,9 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
                                 </span>
                             </button>
+                        </div>
+                        <div v-if="loginMessage" style="margin-top: 10px; color: #ef4444; font-weight: 600; font-size: 0.9rem; animation: fadeIn 0.3s;">
+                            You need to be logged in
                         </div>
                     </div>
 
