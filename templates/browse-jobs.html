@@ -50,11 +50,11 @@
             <h3>Filters</h3>
             
             <div class="filter-group">
-                <label>Workplace</label>
+                <label>Job Type</label>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" value="On-site" v-model="filters.workplace"> On-site</label>
-                    <label><input type="checkbox" value="Hybrid" v-model="filters.workplace"> Hybrid</label>
-                    <label><input type="checkbox" value="Remote" v-model="filters.workplace"> Remote</label>
+                    <label><input type="checkbox" value="On-site" v-model="filters.type"> On-site</label>
+                    <label><input type="checkbox" value="Hybrid" v-model="filters.type"> Hybrid</label>
+                    <label><input type="checkbox" value="Remote" v-model="filters.type"> Remote</label>
                 </div>
             </div>
 
@@ -64,7 +64,6 @@
                     <label><input type="checkbox" value="Cairo" v-model="filters.city"> Cairo</label>
                     <label><input type="checkbox" value="Giza" v-model="filters.city"> Giza</label>
                     <label><input type="checkbox" value="Alexandria" v-model="filters.city"> Alexandria</label>
-                    <label><input type="checkbox" value="Mansoura" v-model="filters.city"> Mansoura</label>
                 </div>
             </div>
 
@@ -73,7 +72,7 @@
                 <div class="checkbox-group">
                     <label><input type="checkbox" value="Accounting" v-model="filters.category"> Accounting</label>
                     <label><input type="checkbox" value="Sales" v-model="filters.category"> Sales</label>
-                    <label><input type="checkbox" value="IT" v-model="filters.category"> IT</label>
+                    <label><input type="checkbox" value="Software" v-model="filters.category"> Software Development</label>
                     <label><input type="checkbox" value="Marketing" v-model="filters.category"> Marketing</label>
                     <label><input type="checkbox" value="Engineering" v-model="filters.category"> Engineering</label>
                 </div>

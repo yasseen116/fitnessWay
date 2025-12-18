@@ -8,7 +8,7 @@ createApp({
             
             // Stores the user's selected filters
             filters: {
-                workplace: [],
+                type: [],
                 city: [],
                 category: [],
                 company: []
@@ -19,7 +19,7 @@ createApp({
     computed: {
         filteredJobs() {
             // If no filters are selected, show everything
-            if (this.filters.workplace.length === 0 && 
+            if (this.filters.type.length === 0 && 
                 this.filters.city.length === 0 && 
                 this.filters.category.length === 0 &&
                 this.filters.company.length === 0) {
@@ -31,9 +31,9 @@ createApp({
                 // 1. Check Workplace (if selected)
                 // We assume job.location or a new job.type field holds this. 
                 // For now, we search the location string for "Remote" or "Hybrid"
-                const jobType = job.location.includes('Remote') ? 'Remote' : 
-                                job.location.includes('Hybrid') ? 'Hybrid' : 'On-site';
-                const matchesWorkplace = this.filters.workplace.length === 0 || this.filters.workplace.includes(jobType);
+                const jobType = job.type.includes('Remote') ? 'Remote' : 
+                                job.type.includes('Hybrid') ? 'Hybrid' : 'On-site';
+                const matchesWorkplace = this.filters.type.length === 0 || this.filters.type.includes(jobType);
 
                 // 2. Check City (if selected)
                 // We check if the job.location string contains the city name
