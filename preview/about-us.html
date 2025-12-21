@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Details - Hired</title>
+    <title>About Us - Hired</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
     <link rel="stylesheet" href="../static/css/style.css">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -98,150 +98,168 @@
 
     <div id="app">
         
-<div id="app" class="container" style="margin-top: 40px; margin-bottom: 60px; min-height: 400px;">
+<div class="page about-page">
     
-    <div v-if="loading" style="text-align: center; padding: 50px; font-size: 1.2rem; color: #666;">
-        Loading job details...
-    </div>
+    <section class="about-hero">
+        <div class="container">
+            <h1>We Are <span class="logo about-hero-logo">Hired</span></h1>
+            <p class="subtitle">Bridging the gap between Egyptian talents and top employers.</p>
+        </div>
+    </section>
 
-    <div v-else class="details-layout">
-        
-        <main class="job-main-content">
-            
-            <div class="content-card job-header-section">
-                <div class="header-top">
+    <section class="vision-section">
+        <div class="container">
+            <div class="vision-grid">
+                
+                <div class="vision-image">
+                    <div class="abstract-visual vision-rocket">
+                        <div class="rocket">
+                            <div class="rocket-body"></div>
+                            <div class="rocket-window"></div>
+                            <div class="rocket-flame flame1"></div>
+                            <div class="rocket-flame flame2"></div>
+                        </div>
+                        <div class="star star1"></div>
+                        <div class="star star2"></div>
+                        <div class="star star3"></div>
+                        <div class="star star4"></div>
+                        <div class="star star5"></div>
+                    </div>
+                </div>
+
+                <div class="vision-text">
+                    <h2>Our Vision</h2>
+                    <p>
+                        We see a future where the job market in Egypt is completely <strong>transparent, efficient, and skill-driven</strong>.
+                    </p>
+                    <p>
+                        Our goal is to become the <strong>#1 Digital Recruitment Infrastructure</strong> in the MENA region. We aim to replace outdated hiring methods with intelligent matching algorithms that empower every graduate to find their place and every company to build their dream team without the hassle.
+                    </p>
                     
-                    <div class="header-info">
-                        <h1 class="details-title">[[ job.title ]]</h1>
-                        
-                        <div class="meta-row">
-                            <span class="meta-label">Location:</span>
-                            <span class="highlight-red">[[ job.location ]]</span>
-                        </div>
-                        <div class="meta-row">
-                            <span class="meta-label">Experience:</span>
-                            <span class="highlight-red">[[ job.experience ]]</span>
-                        </div>
-                        <div class="meta-row">
-                            <span class="meta-label">Salary:</span>
-                            <span class="highlight-red">[[ job.salary ]]</span>
-                        </div>
-
-                        <div class="meta-row">
-                            <span class="meta-label">Job Type:</span>
-                            <span class="highlight-red">[[ job.type ]]</span>
-                        </div>
-
-                        <div class="action-buttons">
-                            <button class="btn btn-apply-large">Apply</button>
-                            
-                            <button 
-                                class="btn btn-share-icon" 
-                                @click="toggleWishlist" 
-                                :title="isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'"
-                                :style="isInWishlist ? 'border-color: #ef4444; color: #ef4444; background-color: #fef2f2;' : ''"
-                            >
-                                <svg v-if="isInWishlist" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="1" y1="1" x2="21" y2="21"></line>
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </button>
-
-                            <button 
-                                class="btn btn-share-icon" 
-                                @click="copyLink" 
-                                :title="isCopied ? 'Link Copied!' : 'Share Job'"
-                                :style="isCopied ? 'border-color: #2ecc71; color: #2ecc71;' : ''"
-                            >
-                                <span v-if="isCopied" style="display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 0.9rem;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                </span>
-
-                                <span v-else>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-                                </span>
-                            </button>
-                        </div>
-                        <div v-if="loginMessage" style="margin-top: 10px; color: #ef4444; font-weight: 600; font-size: 0.9rem; animation: fadeIn 0.3s;">
-                            You need to be logged in
-                        </div>
-                    </div>
-
-                    <div class="header-logo-section">
-                        <div class="company-logo-large">
-                            <img v-if="job.logoUrl" :src="job.logoUrl" :alt="job.company">
-                            <span v-else style="color: #333; font-weight: bold;">[[ job.company ]]</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-card job-body-section">
-                
-                <section class="body-group">
-                    <h3>Job Description:</h3>
-                    <ul>
-                        <li v-for="(point, i) in job.description" :key="i">[[ point ]]</li>
+                    <ul class="vision-list">
+                        <li><span>✔</span> Eliminate Application Fatigue</li>
+                        <li><span>✔</span> Standardize Hiring Processes</li>
+                        <li><span>✔</span> Bridge the Academic-Industry Gap</li>
                     </ul>
-                </section>
-
-                <hr class="divider">
-
-                <section class="body-group">
-                    <h3>Key Responsibilities:</h3>
-                    <ol>
-                        <li v-for="(item, i) in job.responsibilities" :key="i">[[ item ]]</li>
-                    </ol>
-                </section>
-
-                <hr class="divider">
-
-                <section class="body-group">
-                    <h3>Soft Skills:</h3>
-                    <ul>
-                        <li v-for="(skill, i) in job.softSkills" :key="i">[[ skill ]]</li>
-                    </ul>
-                </section>
-
-                <hr class="divider">
-
-                <section class="body-group">
-                    <h3>Qualifications:</h3>
-                    <ol>
-                        <li v-for="(qual, i) in job.qualifications" :key="i">[[ qual ]]</li>
-                    </ol>
-                </section>
-
-            </div>
-
-        </main>
-
-        <aside class="sidebar">
-            <div class="content-card sidebar-card">
-                <h3 class="sidebar-title">Similar Jobs</h3>
-                
-                <div class="similar-list">
-                    <div class="similar-item" v-for="simJob in similarJobs" :key="simJob.id">
-                        <div class="similar-info">
-                            <a :href="'/preview/job-details.html?id=' + simJob.id" class="similar-job-title">[[ simJob.title ]]</a>
-                            <p class="similar-company">[[ simJob.company ]] <span class="text-muted">- [[ simJob.location ]]</span></p>
-                            <p class="similar-exp">[[ simJob.experience ]]</p>
-                        </div>
-                        <div class="similar-logo">
-                            <img v-if="simJob.logoUrl" :src="simJob.logoUrl" :alt="simJob.company">
-                            <span v-else style="font-size: 0.6rem;">No Logo</span>
-                        </div>
-                    </div>
                 </div>
 
             </div>
-        </aside>
+        </div>
+    </section>
 
-    </div>
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-grid">
+                <div class="mission-text">
+                    <h2>Our Mission</h2>
+                    <p>
+                        The recruitment market in Egypt is fragmented. Opportunities are scattered across social media, outdated websites, and closed networks.
+                    </p>
+                    <p>
+                        <strong>Hired</strong> was born out of a simple idea: 
+                        To create a centralized, intelligent platform where job seekers can find opportunities that actually match their needs (like Remote/Hybrid options) and employers can reach the right candidates instantly.
+                    </p>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <span class="stat-number">100+</span>
+                            <span class="stat-label">Listed Jobs</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Top Companies</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Availability</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mission-image">
+                    <div class="abstract-visual mission-network">
+                        <div class="central-node"></div>
+                        <div class="node node1"></div>
+                        <div class="node node2"></div>
+                        <div class="node node3"></div>
+                        <div class="node node4"></div>
+                        <div class="node node5"></div>
+                        <svg class="network-lines" viewBox="0 0 300 300">
+                            <line class="connection" x1="150" y1="150" x2="150" y2="60"></line>
+                            <line class="connection" x1="150" y1="150" x2="240" y2="100"></line>
+                            <line class="connection" x1="150" y1="150" x2="240" y2="200"></line>
+                            <line class="connection" x1="150" y1="150" x2="150" y2="240"></line>
+                            <line class="connection" x1="150" y1="150" x2="60" y2="200"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="container">
+            <h2 class="section-title">Meet the Team</h2>
+            <p class="section-desc">Software Engineering Students @ SAMS</p>
+            
+            <div class="team-grid">
+                
+                <div class="team-card">
+                    <div class="member-avatar">
+                        <img src="../static/images/youssef-ahmed.png" onerror="this.onerror=null; this.src='../static/images/img-placeholder.png'" alt="Youssef Ahmed">
+                    </div>
+                    <h3>Youssef Ahmed</h3>
+                    <p class="role">Team Lead & Full Stack Dev</p>
+                    <p class="bio">Passionate about clean code, Vue.js, and Software Architecture.</p>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-avatar">
+                        <img src="../static/images/ahmed-adel.jpg" onerror="this.onerror=null; this.src='../static/images/img-placeholder.png'" alt="Ahmed Adel">
+                    </div>
+                    <h3>Ahmed Adel</h3>
+                    <p class="role">Frontend Developer</p>
+                    <p class="bio">Focused on UI/UX design and responsive layouts.</p>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-avatar">
+                        <img src="../static/images/beshoy-ayad.jpg" onerror="this.onerror=null; this.src='../static/images/img-placeholder.png'" alt="Beshoy Ayad">
+                    </div>
+                    <h3>Beshoy Ayad</h3>
+                    <p class="role">Requirements Engineer</p>
+                    <p class="bio">Specializes in documentation, UML diagrams, and analysis.</p>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-avatar">
+                        <img src="../static/images/yasseen-mohamed.jpg" onerror="this.onerror=null; this.src='../static/images/img-placeholder.png'" alt="Yasseen Mohamed">
+                    </div>
+                    <h3>Yasseen Mohamed</h3>
+                    <p class="role">Backend Developer</p>
+                    <p class="bio">Handling database schemas and API logic.</p>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-avatar">
+                        <img src="../static/images/omar-yosrii.jpg" onerror="this.onerror=null; this.src='../static/images/img-placeholder.png'" alt="Omar Yosrii">
+                    </div>
+                    <h3>Omar Yosrii</h3>
+                    <p class="role">Backend Developer</p>
+                    <p class="bio">Handling database schemas and API logic.</p>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-avatar">
+                        <img src="../static/images/omar-seddiek.jpg" onerror="this.onerror=null; this.src='../static/images/img-placeholder.png'" alt="Omar Seddiek">
+                    </div>
+                    <h3>Omar Seddiek</h3>
+                    <p class="role">Backend Developer</p>
+                    <p class="bio">Handling database schemas and API logic.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
 </div>
 
     </div>
@@ -284,8 +302,6 @@
         </div>
     </footer>
     
-    <script src="../static/js/model.js"></script>
-    <script src="../static/js/job-details.js"></script>
-
+    
 </body>
 </html>
