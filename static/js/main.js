@@ -9,7 +9,26 @@ const app = createApp({
             error: null,
             
             companies: [],
-            isTeleporting: false
+            isTeleporting: false,
+
+            showApplyModal: false,
+            selectedJobForApp: null,
+            newCvName: null,
+
+            showApplyModal: false,
+            selectedJobForApp: null,
+            newCvName: null,
+            
+            showLoginNotification: false,
+
+            showApplyModal: false,
+            selectedJobForApp: null,
+            newCvName: null,
+            showLoginNotification: false,
+            
+            isApplying: false,
+            showSuccessNotification: false,
+            successMessage: ''
         };
     },
     
@@ -44,7 +63,6 @@ const app = createApp({
         async loadJobs() {
             try {
                 this.isLoading = true;
-                // UPDATED: Changed from fetchAll() to getAll()
                 this.jobs = await JobModel.getAll();
             } catch (err) {
                 console.error("Failed to load jobs:", err);
@@ -58,20 +76,14 @@ const app = createApp({
             const container = e.target;
             if (this.isTeleporting) return;
 
-            // We calculate the width of ONE full set of companies
-            // (Total width / 2 because we duplicated it once)
             const oneSetWidth = container.scrollWidth / 2;
 
-            // CHECK 1: Have we scrolled past the end of the first set?
             if (container.scrollLeft >= oneSetWidth) {
-                // TELEPORT BACK TO START (Invisible Jump)
                 this.isTeleporting = true;
                 container.scrollLeft -= oneSetWidth;
                 this.isTeleporting = false;
             } 
-            // CHECK 2: Have we scrolled past the start (going backwards)?
             else if (container.scrollLeft <= 0) {
-                // TELEPORT TO THE MIDDLE (Invisible Jump)
                 this.isTeleporting = true;
                 container.scrollLeft += oneSetWidth;
                 this.isTeleporting = false;
@@ -90,8 +102,48 @@ const app = createApp({
         },
 
         showJobDetails(job) {
-            // Optional: You can redirect to details page here if needed
             window.location.href = `/preview/job-details.html?id=${job.id}`;
+        },
+
+        openApplyModal(job) {
+            const user = localStorage.getItem('user');
+            
+            if (!user) {
+                this.showLoginNotification = true;
+
+                setTimeout(() => {
+                    window.location.href = '/preview/login.html';
+                }, 2000);
+                
+                return;
+            }
+            
+            this.selectedJobForApp = job || this.job; 
+            this.showApplyModal = true;
+            this.newCvName = null;
+        },
+
+        closeModal() {
+            this.showApplyModal = false;
+            this.selectedJobForApp = null;
+        },
+
+        applyWithExisting() {
+            alert(`Application sent to ${this.selectedJobForApp.company} using your default CV!`);
+            this.closeModal();
+        },
+
+        handleCvUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.newCvName = file.name;
+            }
+        },
+
+        applyWithNew() {
+            if (!this.newCvName) return;
+            alert(`Application sent to ${this.selectedJobForApp.company} using ${this.newCvName}!`);
+            this.closeModal();
         }
     },
 

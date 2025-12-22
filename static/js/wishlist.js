@@ -4,7 +4,26 @@ createApp({
     data() {
         return {
             isLoading: true,
-            savedJobs: [] 
+            savedJobs: [],
+
+            showApplyModal: false,
+            selectedJobForApp: null,
+            newCvName: null,
+
+            showApplyModal: false,
+            selectedJobForApp: null,
+            newCvName: null,
+            
+            showLoginNotification: false,
+
+            showApplyModal: false,
+            selectedJobForApp: null,
+            newCvName: null,
+            showLoginNotification: false,
+            
+            isApplying: false,
+            showSuccessNotification: false,
+            successMessage: ''
         }
     },
 
@@ -41,12 +60,52 @@ createApp({
             list = list.filter(id => id !== idToRemove);
             localStorage.setItem('my_wishlist', JSON.stringify(list));
 
-            // Remove from the UI
             this.savedJobs = this.savedJobs.filter(job => String(job.id) !== idToRemove);
         },
 
         goToDetails(jobId) {
             window.location.href = `/preview/job-details.html?id=${jobId}`;
+        },
+
+        openApplyModal(job) {
+            const user = localStorage.getItem('user');
+            
+            if (!user) {
+                this.showLoginNotification = true;
+
+                setTimeout(() => {
+                    window.location.href = '/preview/login.html';
+                }, 2000);
+                
+                return;
+            }
+            
+            this.selectedJobForApp = job || this.job; 
+            this.showApplyModal = true;
+            this.newCvName = null;
+        },
+
+        closeModal() {
+            this.showApplyModal = false;
+            this.selectedJobForApp = null;
+        },
+
+        applyWithExisting() {
+            alert(`Application sent to ${this.selectedJobForApp.company} using your default CV!`);
+            this.closeModal();
+        },
+
+        handleCvUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.newCvName = file.name;
+            }
+        },
+
+        applyWithNew() {
+            if (!this.newCvName) return;
+            alert(`Application sent to ${this.selectedJobForApp.company} using ${this.newCvName}!`);
+            this.closeModal();
         }
     },
 

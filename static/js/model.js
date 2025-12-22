@@ -61,7 +61,7 @@ const JobModel = {
         },
         {
             id: 3,
-            title: "Software Develper",
+            title: "Software Developer",
             company: "Vodafone",
             location: "Smart Village, Cairo",
             experience: "1-3 Years",
@@ -355,5 +355,52 @@ const CompanyModel = {
             { name: "NBE", logo: "../static/images/companies/nbe.png" },
             { name: "Edita", logo: "../static/images/companies/edita.png" }
         ];
+    }
+};
+
+const ApplicationModel = {
+    // Simulate sending data to a server
+    submit(jobId, cvType, fileName = null) {
+        return new Promise((resolve, reject) => {
+            console.log(`[API] Submitting application for Job ${jobId}...`);
+            
+            // 1. Simulate Network Delay (1.5 seconds)
+            setTimeout(() => {
+                try {
+                    // 2. Get User Data (Simulate Session)
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    if (!user) throw new Error("User not authenticated");
+
+                    // 3. Save to "Database" (LocalStorage)
+                    const applications = JSON.parse(localStorage.getItem('my_applications') || '[]');
+                    
+                    // Check for duplicates (Optional realism)
+                    const alreadyApplied = applications.some(app => app.jobId === jobId && app.userEmail === user.email);
+                    if (alreadyApplied) {
+                        resolve({ success: false, message: "You have already applied to this job!" });
+                        return;
+                    }
+
+                    const newApplication = {
+                        id: Date.now(), // Random ID
+                        jobId: jobId,
+                        userEmail: user.email,
+                        cvType: cvType, // 'existing' or 'new'
+                        cvName: fileName || 'Default_CV.pdf',
+                        appliedAt: new Date().toLocaleDateString(),
+                        status: 'Pending'
+                    };
+
+                    applications.push(newApplication);
+                    localStorage.setItem('my_applications', JSON.stringify(applications));
+
+                    console.log("[API] Application Saved:", newApplication);
+                    resolve({ success: true, message: "Application submitted successfully!" });
+
+                } catch (error) {
+                    reject(error);
+                }
+            }, 1500); // 1.5s delay
+        });
     }
 };
