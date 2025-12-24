@@ -22,12 +22,19 @@ createApp({
             },
             applications: [],
 
-            // Notification States
+            // Toasts
             showSuccessNotification: false,
             successMessage: '',
+            showErrorNotification: false,
+            errorMessage: '',
 
-            // NEW: Delete Modal State
-            showDeleteModal: false
+            // Delete Modal State
+            showDeleteModal: false,
+
+            // Cropper state
+            showCropModal: false,
+            tempImageUrl: null,
+            cropper: null
         }
     },
     async mounted() {
@@ -64,6 +71,14 @@ createApp({
                     education: formattedEdu
                 };
 
+                // 4.a Hydrate photo from localStorage if available
+                if (!this.user.photo) {
+                    const storedPhoto = localStorage.getItem('user_photo');
+                    if (storedPhoto) {
+                        this.user.photo = storedPhoto;
+                    }
+                }
+
                 // 5. Get Applications
                 const rawApps = JSON.parse(localStorage.getItem('my_applications') || '[]');
 
@@ -83,6 +98,76 @@ createApp({
             } finally {
                 this.loading = false;
             }
+        },
+
+        // --- PHOTO + CROPPER ---
+        handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            // Updated size guard: ~5MB max for localStorage safety
+            const maxBytes = 5 * 1024 * 1024;
+            if (file.size > maxBytes) {
+                // Show error toast instead of alert
+                this.errorMessage = 'Selected image is too large. Please choose an image under 5MB.';
+                this.showErrorNotification = true;
+                setTimeout(() => { this.showErrorNotification = false; }, 3000);
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.tempImageUrl = e.target.result;
+                this.showCropModal = true;
+                this.$nextTick(() => {
+                    const imgEl = this.$refs.cropperImage;
+                    if (!imgEl) return;
+                    // Destroy previous cropper if exists
+                    if (this.cropper) { this.cropper.destroy(); this.cropper = null; }
+                    // Initialize Cropper.js with square aspect ratio
+                    this.cropper = new Cropper(imgEl, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        dragMode: 'move',
+                        background: false,
+                        responsive: true,
+                        movable: true,
+                        zoomable: true,
+                        minCropBoxWidth: 100,
+                        minCropBoxHeight: 100
+                    });
+                });
+            };
+            reader.readAsDataURL(file);
+        },
+        closeCropper() {
+            if (this.cropper) { this.cropper.destroy(); this.cropper = null; }
+            this.showCropModal = false;
+            this.tempImageUrl = null;
+        },
+        async confirmCrop() {
+            if (!this.cropper) { this.closeCropper(); return; }
+            try {
+                const canvas = this.cropper.getCroppedCanvas({ width: 512, height: 512, imageSmoothingQuality: 'high' });
+                const dataUrl = canvas.toDataURL('image/png');
+                this.user.photo = dataUrl;
+                try { localStorage.setItem('user_photo', dataUrl); } catch {}
+                this.successMessage = 'Profile photo updated.';
+                this.showSuccessNotification = true;
+                setTimeout(() => { this.showSuccessNotification = false; }, 3000);
+            } catch (e) {
+                this.errorMessage = 'Could not crop the image. Please try another file.';
+                this.showErrorNotification = true;
+                setTimeout(() => { this.showErrorNotification = false; }, 3000);
+            } finally {
+                this.closeCropper();
+            }
+        },
+        removePhoto() {
+            this.user.photo = null;
+            localStorage.removeItem('user_photo');
+            this.successMessage = 'Profile photo removed.';
+            this.showSuccessNotification = true;
+            setTimeout(() => { this.showSuccessNotification = false; }, 3000);
         },
 
         // --- SKILLS ---
@@ -131,12 +216,10 @@ createApp({
         },
 
         // --- UPDATED: Delete Logic ---
-        // 1. Trigger the Modal
         removeCv() {
             this.showDeleteModal = true;
         },
 
-        // 2. Actually Delete (Called from Modal)
         confirmDeleteCv() {
             this.user.cvName = null;
             this.showDeleteModal = false;
@@ -147,7 +230,6 @@ createApp({
             setTimeout(() => { this.showSuccessNotification = false; }, 3000);
         },
 
-        // 3. Cancel Delete
         closeDeleteModal() {
             this.showDeleteModal = false;
         },

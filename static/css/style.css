@@ -2048,3 +2048,15 @@ body {
     opacity: 0;
     transform: scale(0.8); /* Start 20% smaller */
 }
+
+.crop-modal-card {
+    background: white;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease-in-out;
+    padding: 30px;
+}
