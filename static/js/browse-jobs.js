@@ -5,7 +5,10 @@ createApp({
         return {
             isLoading: true,
             allJobs: [],
-            
+
+            // 1. ADDED: Search Query State
+            searchQuery: '',
+
             filters: {
                 type: [],
                 city: [],
@@ -13,21 +16,11 @@ createApp({
                 company: []
             },
 
-            showApplyModal: false,
-            selectedJobForApp: null,
-            newCvName: null,
-
-            showApplyModal: false,
-            selectedJobForApp: null,
-            newCvName: null,
-            
-            showLoginNotification: false,
-
+            // Modal & Notification States
             showApplyModal: false,
             selectedJobForApp: null,
             newCvName: null,
             showLoginNotification: false,
-            
             isApplying: false,
             showSuccessNotification: false,
             successMessage: ''
@@ -36,22 +29,35 @@ createApp({
 
     computed: {
         filteredJobs() {
-            if (this.filters.type.length === 0 && 
-                this.filters.city.length === 0 && 
-                this.filters.category.length === 0 &&
-                this.filters.company.length === 0) {
-                return this.allJobs;
+            // Start with all jobs
+            let result = this.allJobs;
+
+            // 1. SEARCH FILTER (New Logic)
+            if (this.searchQuery) {
+                const q = this.searchQuery.toLowerCase();
+                result = result.filter(job =>
+                    job.title.toLowerCase().includes(q) ||
+                    job.company.toLowerCase().includes(q)
+                );
             }
 
-            return this.allJobs.filter(job => {
-                const jobType = job.type.includes('Remote') ? 'Remote' : 
-                                job.type.includes('Hybrid') ? 'Hybrid' : 'On-site';
+            // 2. CHECKBOX FILTERS
+            // If no checkboxes are selected, return the result (which might already be filtered by search)
+            if (this.filters.type.length === 0 &&
+                this.filters.city.length === 0 &&
+                this.filters.category.length === 0 &&
+                this.filters.company.length === 0) {
+                return result;
+            }
+
+            // Apply Checkbox Logic
+            return result.filter(job => {
+                const jobType = job.type.includes('Remote') ? 'Remote' :
+                    job.type.includes('Hybrid') ? 'Hybrid' : 'On-site';
+
                 const matchesWorkplace = this.filters.type.length === 0 || this.filters.type.includes(jobType);
-
                 const matchesCity = this.filters.city.length === 0 || this.filters.city.some(city => job.location.includes(city));
-
                 const matchesCategory = this.filters.category.length === 0 || this.filters.category.some(cat => job.title.includes(cat) || job.company.includes(cat));
-
                 const matchesCompany = this.filters.company.length === 0 || this.filters.company.includes(job.company);
 
                 return matchesWorkplace && matchesCity && matchesCategory && matchesCompany;
@@ -61,7 +67,17 @@ createApp({
 
     async mounted() {
         try {
+            // 1. Fetch Data
             this.allJobs = await JobModel.getAll();
+
+            // 2. CAPTURE URL SEARCH PARAMETER
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchParam = urlParams.get('search');
+
+            if (searchParam) {
+                this.searchQuery = searchParam;
+            }
+
         } catch (error) {
             console.error("Error loading jobs:", error);
         } finally {
@@ -74,20 +90,17 @@ createApp({
             window.location.href = `job-details.html?id=${jobId}`;
         },
 
+        // --- SHARED MODAL LOGIC ---
         openApplyModal(job) {
             const user = localStorage.getItem('user');
-            
+
             if (!user) {
                 this.showLoginNotification = true;
-
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-                
+                setTimeout(() => { window.location.href = 'login.html'; }, 2000);
                 return;
             }
-            
-            this.selectedJobForApp = job || this.job; 
+
+            this.selectedJobForApp = job || this.job;
             this.showApplyModal = true;
             this.newCvName = null;
         },
@@ -97,89 +110,43 @@ createApp({
             this.selectedJobForApp = null;
         },
 
-        applyWithExisting() {
-            alert(`Application sent to ${this.selectedJobForApp.company} using your default CV!`);
-            this.closeModal();
-        },
-
         handleCvUpload(event) {
             const file = event.target.files[0];
-            if (file) {
-                this.newCvName = file.name;
-            }
-        },
-
-        applyWithNew() {
-            if (!this.newCvName) return;
-            alert(`Application sent to ${this.selectedJobForApp.company} using ${this.newCvName}!`);
-            this.closeModal();
+            if (file) this.newCvName = file.name;
         },
 
         async applyWithExisting() {
-            // 1. Start Loading
             this.isApplying = true;
-
             try {
-                // 2. Call the Simulated API
-                const response = await ApplicationModel.submit(
-                    this.selectedJobForApp.id, 
-                    'existing'
-                );
-
-                // 3. Handle Result
+                const response = await ApplicationModel.submit(this.selectedJobForApp.id, 'existing');
                 this.handleApplicationResult(response);
-
             } catch (error) {
-                console.error(error);
-                alert("An error occurred. Please try again.");
-            } finally {
-                // 4. Stop Loading
-                this.isApplying = false;
-            }
-        },
-
-        // OPTION B: Apply with New CV
-        async applyWithNew() {
-            if (!this.newCvName) return;
-
-            // 1. Start Loading
-            this.isApplying = true;
-
-            try {
-                // 2. Call the Simulated API
-                const response = await ApplicationModel.submit(
-                    this.selectedJobForApp.id, 
-                    'new',
-                    this.newCvName
-                );
-
-                // 3. Handle Result
-                this.handleApplicationResult(response);
-
-            } catch (error) {
-                console.error(error);
                 alert("An error occurred.");
             } finally {
                 this.isApplying = false;
             }
         },
 
-        // HELPER: Handles success/failure UI logic
+        async applyWithNew() {
+            if (!this.newCvName) return;
+            this.isApplying = true;
+            try {
+                const response = await ApplicationModel.submit(this.selectedJobForApp.id, 'new', this.newCvName);
+                this.handleApplicationResult(response);
+            } catch (error) {
+                alert("An error occurred.");
+            } finally {
+                this.isApplying = false;
+            }
+        },
+
         handleApplicationResult(response) {
             if (response.success) {
-                // Close Modal Immediately
                 this.closeModal();
-
-                // Show Green Success Toast
                 this.successMessage = response.message;
                 this.showSuccessNotification = true;
-
-                // Hide Toast after 3 seconds
-                setTimeout(() => {
-                    this.showSuccessNotification = false;
-                }, 3000);
+                setTimeout(() => { this.showSuccessNotification = false; }, 3000);
             } else {
-                // Show error (e.g., if already applied)
                 alert(response.message);
             }
         },

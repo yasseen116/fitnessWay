@@ -25,7 +25,27 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
 
-                <input type="text" placeholder="Search about your Job">
+                <input
+                    type="text"
+                    id="nav-search-input"
+                    placeholder="Search for a job..."
+                    onkeypress="handleNavSearch(event)"
+                >
+
+                <script>
+                    function handleNavSearch(event) {
+                        // Check if the key pressed is "Enter" (Key Code 13)
+                        if (event.key === 'Enter') {
+                            const query = document.getElementById('nav-search-input').value.trim();
+
+                            if (query) {
+                                // Redirect to browse-jobs.html with the search query
+                                // encodeURIComponent makes sure spaces/symbols don't break the URL
+                                window.location.href = `browse-jobs.html?search=${encodeURIComponent(query)}`;
+                            }
+                        }
+                    }
+                </script>
             </div>
 
             <div class="auth-buttons">
