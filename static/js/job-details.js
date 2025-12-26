@@ -43,23 +43,20 @@ createApp({
         }
 
         try {
-            // 2. Fetch the Specific Job
-            // Note: Using '/jobs/' based on your successful browse-jobs connection
-            const response = await fetch(`http://127.0.0.1:8000/api/jobs/${jobId}`);
+            // MVC Step 1: Get Job Details from Model
+            this.job = await JobModel.getById(jobId);
+            console.log("Job Details loaded:", this.job);
 
-            if (!response.ok) throw new Error("Job not found");
+            // MVC Step 2: Get Similar Jobs from Model
+            // (The Model now handles the specific API endpoint logic)
+            this.similarJobs = await JobModel.getSimilar(jobId);
+            console.log("Similar Jobs loaded:", this.similarJobs);
 
-            this.job = await response.json();
-
-            // 3. Fetch Similar Jobs (Client-side simulation)
-            // We fetch all jobs and filter for the same category
-            this.fetchSimilarJobs(jobId, this.job.category);
-
-            // 4. Check Wishlist (Local Storage)
+            // 3. Check Wishlist (Local Storage logic)
             this.checkWishlistStatus(jobId);
 
         } catch (error) {
-            console.error("Error loading job:", error);
+            console.error("Error loading job details:", error);
             this.error = "Job not found or API is down.";
         } finally {
             this.loading = false;
@@ -67,18 +64,19 @@ createApp({
     },
 
     methods: {
-        async fetchSimilarJobs(currentId, category) {
+        async fetchSimilarJobs(currentId) {
             try {
-                // Fetch all jobs to find matches
-                // (In a real large app, you would have a backend endpoint for this)
-                const res = await fetch('http://127.0.0.1:8000/jobs');
-                if (res.ok) {
-                    const allJobs = await res.json();
+                // Use the dedicated endpoint for similar jobs
+                const response = await fetch(`http://127.0.0.1:8000/api/jobs/${currentId}/similar`);
 
-                    // Filter: Same category, not the current job, limit to 3
-                    this.similarJobs = allJobs
-                        .filter(j => j.category === category && j.id != currentId)
-                        .slice(0, 3);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Similar Jobs from API:", data);
+
+                    // Assign directly. The backend already handles filtering and limiting.
+                    this.similarJobs = data;
+                } else {
+                    console.warn("API returned error for similar jobs");
                 }
             } catch (err) {
                 console.warn("Could not load similar jobs", err);

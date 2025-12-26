@@ -89,7 +89,6 @@ createApp({
     },
 
     async mounted() {
-        // --- KEY CHANGE: FETCH FROM API ---
         this.fetchJobs();
 
         // Capture URL Search Parameter
@@ -121,26 +120,18 @@ createApp({
     },
 
     methods: {
-        // --- NEW METHOD: CONNECT TO BACKEND ---
         async fetchJobs() {
             try {
                 this.isLoading = true;
-                // Fetch from your local API
-                const response = await fetch('http://127.0.0.1:8000/api/jobs');
 
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.status}`);
-                }
+                // MVC: Ask the Model for data
+                this.allJobs = await JobModel.getAll();
 
-                const data = await response.json();
-                console.log("Jobs loaded from API:", data);
-
-                // Assign API data to Vue state
-                this.allJobs = data;
-
-            } catch (error) {
-                console.error("Failed to fetch jobs:", error);
-                this.errorMessage = "Could not load jobs. Make sure the backend is running.";
+                // Debugging
+                console.log("Browse Jobs loaded via Model:", this.jobs);
+            } catch (err) {
+                console.error(err);
+                this.error = "Could not load jobs.";
             } finally {
                 this.isLoading = false;
             }
