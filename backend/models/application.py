@@ -7,7 +7,7 @@ class Application(Base):
     __tablename__ = "applications"
 
     id = Column(Integer, primary_key=True, index=True)
-    status = Column(String, default="Applied") 
+    status = Column(String, default="Applied") # Applied , viewed, rejected, accepted
     applied_at = Column(DateTime(timezone=True), server_default=func.now())
     
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
