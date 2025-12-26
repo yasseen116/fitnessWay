@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from sqlalchemy.sql import func
 from backend.database import Base
 
 class Job(Base):
@@ -14,10 +14,10 @@ class Job(Base):
     
     # filtering fields
     salary = Column(String, nullable=True)
-    job_type = Column(String, nullable=True) # Full-time | Part-time | Remote
-    posted_at = Column(DateTime, default=datetime.utcnow)
+    job_type = Column(String, nullable=True) 
+    posted_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     # relations
     owner = relationship("User", back_populates="jobs")
