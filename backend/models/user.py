@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean, Text
+from sqlalchemy import Column, Integer, String, Boolean, Text , DateTime
 from sqlalchemy.orm import relationship
 from backend.database import Base
+from sqlalchemy.sql import func
 
 class User(Base):
     __tablename__ = "users"
@@ -9,8 +10,9 @@ class User(Base):
     full_name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
-    role = Column(String, nullable=False)  # job_seeker | company
+    role = Column(String, nullable=False)  
     is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # profile fields
     phone = Column(String, nullable=True)
